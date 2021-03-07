@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/email"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edit_text_background"
+        android:hint="Phone Number"
+        android:paddingLeft="20dp"
+        android:paddingTop="9dp"
+        android:paddingBottom="9dp"
+        android:layout_marginTop="90dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/username"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edit_text_background"
+        android:hint="Name"
+
+        android:paddingLeft="20dp"
+        android:paddingTop="9dp"
+        android:paddingBottom="9dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintStart_toStartOf="@+id/email"
+        app:layout_constraintTop_toBottomOf="@+id/email" />
+
+    <EditText
+        android:id="@+id/pass"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/edit_text_background"
+        android:hint="Pasword"
+        android:inputType="textPassword"
+        android:paddingLeft="20dp"
+        android:paddingTop="9dp"
+        android:paddingBottom="9dp"
+        app:layout_constraintStart_toStartOf="@+id/username"
+        app:layout_constraintTop_toBottomOf="@+id/username" />
+
+    <EditText
+        android:id="@+id/confirm"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/edit_text_background"
+        android:hint="Confirm Password"
+        android:inputType="textPassword"
+        android:paddingLeft="20dp"
+        android:paddingTop="9dp"
+        android:paddingBottom="9dp"
+        app:layout_constraintStart_toStartOf="@+id/pass"
+        app:layout_constraintTop_toBottomOf="@+id/pass" />
+
+
+    <Button
+        android:id="@+id/button_sig"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_background"
+        android:text="sign up"
+        android:textColor="@color/deep_yellow"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/switch_passSee"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/pass"
+        app:layout_constraintEnd_toEndOf="@+id/username"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/pass"
+        app:layout_constraintTop_toTopOf="@+id/pass"
+        app:layout_constraintVertical_bias="0.466">
+
+    </androidx.appcompat.widget.SwitchCompat>
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/switch_confirmSee"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="3dp"
+        app:layout_constraintBottom_toBottomOf="@+id/confirm"
+        app:layout_constraintEnd_toEndOf="@+id/username"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/confirm"
+        app:layout_constraintTop_toTopOf="@+id/confirm"
+        app:layout_constraintVertical_bias="0.533">
+
+    </androidx.appcompat.widget.SwitchCompat>
+
+    <View
+        android:id="@+id/viewColor1"
+        android:layout_width="75dp"
+        android:layout_height="10dp"
+        android:background="@drawable/password_background_one"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/pass"
+        app:layout_constraintStart_toEndOf="@+id/textView"
+        app:layout_constraintTop_toBottomOf="@+id/username" />
+
+    <View
+        android:id="@+id/viewColor2"
+        android:layout_width="75dp"
+        android:layout_height="10dp"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/password_background_two"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/pass"
+        app:layout_constraintStart_toEndOf="@+id/viewColor1"
+        app:layout_constraintTop_toBottomOf="@+id/username" />
+
+    <View
+        android:id="@+id/viewColor3"
+        android:layout_width="75dp"
+        android:layout_height="10dp"
+        android:background="@drawable/password_background_three"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/pass"
+        app:layout_constraintEnd_toEndOf="@+id/switch_passSee"
+        app:layout_constraintHorizontal_bias="0.9"
+        app:layout_constraintStart_toEndOf="@+id/viewColor2"
+        app:layout_constraintTop_toBottomOf="@+id/username" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="密码强度："
+        android:textSize="10sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/pass"
+        app:layout_constraintStart_toStartOf="@+id/pass"
+        app:layout_constraintTop_toBottomOf="@+id/username" />
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">TopSecret</string>
+    <string name="xf_app_id">60434b36</string>
+    <string name="reg_uninit">等待初始化</string>
+    <string name="reg_tip">注册声纹</string>
+    <string name="unreg_tip">重新注册声纹</string>
+    <string name="reg_error">注册失败</string>
+</resources>
