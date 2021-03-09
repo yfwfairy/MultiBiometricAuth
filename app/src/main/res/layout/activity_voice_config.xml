@@ -4,103 +4,87 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/intro_background"
     tools:context=".voice.VoiceConfigActivity">
 
+    <include
+        android:id="@+id/include"
+        layout="@layout/title_layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="-2dp" />
+
+    <ImageButton
+        android:id="@+id/imageButton_reminder"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="16dp"
+        android:background="@drawable/reminder"
+        android:onClick="reminderClicked"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/include" />
+
+
     <TextView
-        android:id="@+id/title"
+        android:id="@+id/status_txv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="声纹识别"
-        android:textSize="25dp"
+        android:onClick="voiceRegClicked"
+        android:text="@string/initfailed_title"
+        android:textColor="@color/black"
+        android:layout_marginLeft="26dp"
+        android:layout_marginTop="46dp"
+        android:textSize="46sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/include" />
+
+    <TextView
+        android:id="@+id/status_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="voiceRegClicked"
+        android:text="@string/initfailed_description"
+        android:textColor="@color/black"
+        android:layout_marginLeft="26dp"
+        android:layout_marginTop="16dp"
+        android:textSize="26sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/status_txv" />
+
+    <ImageView
+        android:id="@+id/record_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.074" />
+        app:layout_constraintTop_toTopOf="@+id/include"
+        app:srcCompat="@drawable/ic_recorder" />
 
-
-    <Button
-        android:id="@+id/reg_button"
+    <TextView
+        android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="52dp"
-        android:text= "@string/reg_uninit"
-        android:onClick="voiceRegClicked"
-        android:textSize="20sp"
-        android:textStyle="bold"
+        android:layout_marginTop="16dp"
+        android:text="点击录音"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title" />
+        app:layout_constraintTop_toBottomOf="@+id/record_button" />
 
     <TextView
         android:id="@+id/tip_txv"
-        android:layout_width="300dp"
-        android:layout_height="100dp"
-        android:layout_marginTop="32dp"
-        android:hint="提示"
-        android:paddingLeft="20dp"
-        android:paddingTop="9dp"
-        android:paddingBottom="9dp"
-        android:maxLines="3"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:text="tips"
+        android:textSize="26sp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="26dp"
+        android:layout_marginRight="26dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/speak_floatbutton" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/speak_floatbutton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="52dp"
-        android:backgroundTint="@color/white"
-        android:src="@drawable/micro"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/reg_button" />
-
-    <Button
-        android:id="@+id/verify_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:onClick="voiceVrfClicked"
-        android:text="验证"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tip_txv" />
-
-    <Button
-        android:id="@+id/unReg_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:onClick="voiceDelClicked"
-        android:text="删除模型"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/verify_btn" />
-
-    <TextView
-        android:id="@+id/result_txv"
-        android:layout_width="300dp"
-        android:layout_height="100dp"
-        android:layout_marginTop="32dp"
-        android:hint="结果"
-        android:paddingLeft="20dp"
-        android:paddingTop="9dp"
-        android:paddingBottom="9dp"
-        android:maxLines="3"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/unReg_btn" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

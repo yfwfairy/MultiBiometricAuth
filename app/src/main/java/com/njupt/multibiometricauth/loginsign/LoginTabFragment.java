@@ -22,7 +22,7 @@ import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 
 import com.njupt.multibiometricauth.Constants;
-import com.njupt.multibiometricauth.MainActivity;
+import com.njupt.multibiometricauth.main.MainActivity;
 import com.njupt.multibiometricauth.R;
 import com.njupt.multibiometricauth.SQLite.User;
 import com.njupt.multibiometricauth.SQLite.UserDatabaseHelper;

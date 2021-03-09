@@ -1,8 +1,17 @@
 <resources>
     <string name="app_name">TopSecret</string>
     <string name="xf_app_id">60434b36</string>
-    <string name="reg_uninit">等待初始化</string>
-    <string name="reg_tip">注册声纹</string>
-    <string name="unreg_tip">重新注册声纹</string>
+    <string name="reg_uninit">点此初始化</string>
+    <string name="reg_tip">点此获取注册密码</string>
+    <string name="unreg_tip">已注册声纹，点击下方验证或点此重新注册声纹</string>
     <string name="reg_error">注册失败</string>
+
+    <string name="regged_title">已注册</string>
+    <string name="regged_description">长按下方验证或重新注册声纹</string>
+
+    <string name="unuregged_title">未注册</string>
+    <string name="unregged_description">长按录音注册声纹</string>
+
+    <string name="initfailed_title">初始化失败</string>
+    <string name="initfailed_description">请检查相关配置</string>
 </resources>
