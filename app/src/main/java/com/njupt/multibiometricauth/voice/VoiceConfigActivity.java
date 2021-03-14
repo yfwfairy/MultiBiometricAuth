@@ -1,20 +1,23 @@
 package com.njupt.multibiometricauth.voice;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.graphics.drawable.Drawable;
+import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.iflytek.cloud.ErrorCode;
 import com.iflytek.cloud.IdentityListener;
@@ -26,7 +29,6 @@ import com.iflytek.cloud.SpeechError;
 import com.iflytek.cloud.SpeechEvent;
 import com.iflytek.cloud.record.PcmRecorder;
 import com.iflytek.cloud.util.VerifierUtil;
-import com.lizhidan.voicebutton.VoiceButton;
 import com.njupt.multibiometricauth.Constants;
 import com.njupt.multibiometricauth.MMAApplication;
 import com.njupt.multibiometricauth.R;
@@ -37,13 +39,22 @@ import org.json.JSONObject;
 
 public class VoiceConfigActivity extends AppCompatActivity {
 
+    private int BASE = 600;
+    private int SPACE = 200;// 间隔取样时间
+    private Drawable[] micImages;
+    //话筒的图片
+    private ImageView micImage;
     private static final String TAG = VoiceConfigActivity.class.getSimpleName();
     private static final int PWD_TYPE_NUM = 3;
-    private ImageView recordImv;
     private TextView statusTitleTxv;
     private TextView statusDescTxv;
     private TextView tipTxv;
     private Button backButton;
+    private Button unRegBtn;
+    private ConstraintLayout recordingContainer;
+    private TextView recordingHint;
+    private Button recordImv;
+    private MediaRecorder recorder=null;
     // 会话类型
     private int mSST = 0;
     // 注册
@@ -131,10 +142,20 @@ public class VoiceConfigActivity extends AppCompatActivity {
         statusTitleTxv = findViewById(R.id.status_txv);
         statusDescTxv = findViewById(R.id.status_desc);
         backButton = findViewById(R.id.back_button);
+        unRegBtn = findViewById(R.id.unreg_btn);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
+            }
+        });
+
+        unRegBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mRegStatus == VoiceRegStatus.REG) {
+                    executeModelCommand("delete");
+                }
             }
         });
         mToast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
@@ -154,56 +175,59 @@ public class VoiceConfigActivity extends AppCompatActivity {
         });
 
         recordImv.setOnTouchListener(new View.OnTouchListener() {
+            @SuppressLint("ClickableViewAccessibility")
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (mRegStatus == VoiceRegStatus.UNINIT || mRegStatus == VoiceRegStatus.REGERROR) {
                     showTip("init error can't record");
                     return false;
                 }
-                    switch (motionEvent.getAction()) {
-                        case MotionEvent.ACTION_DOWN:
-                            if (!isStartWork) {
-                                recordImv.setImageResource(R.drawable.micro);
-                                if (mSST == SST_ENROLL) {
-                                    if (mNumPwdSegs == null) {
-                                        downloadPwd();
-                                        break;
-                                    }
-                                    vocalEnroll();
-                                } else if (mSST == SST_VERIFY) {
-                                    vocalVerify();
-                                } else {
-                                    showTip("mSST invalid!");
+                switch (motionEvent.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        if (!isStartWork) {
+//                            recordImv.setImageResource(R.drawable.micro);
+                            if (mSST == SST_ENROLL) {
+                                if (mNumPwdSegs == null) {
+                                    downloadPwd();
                                     break;
                                 }
-                                isStartWork = true;
-                                mCanStartRecord = true;
-                            }
-                            if (mCanStartRecord) {
-                                try {
-                                    mPcmRecorder = new PcmRecorder(SAMPLE_RATE, 40);
-                                    mPcmRecorder.startRecording(mPcmRecordListener);
-                                } catch (SpeechError e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                            break;
-                            case MotionEvent.ACTION_UP:
-                                mIdVerifier.stopWrite("ivp");
-                                if (null != mPcmRecorder) {
-                                    mPcmRecorder.stopRecord(true);
-                                }
-                                recordImv.setImageResource(R.drawable.ic_recorder);
+                                vocalEnroll();
+                            } else if (mSST == SST_VERIFY) {
+                                vocalVerify();
+                            } else {
+                                showTip("mSST invalid!");
                                 break;
-                    }
+                            }
+                            isStartWork = true;
+                            mCanStartRecord = true;
+                        }
+                        if (mCanStartRecord) {
+                            try {
+                                mPcmRecorder = new PcmRecorder(SAMPLE_RATE, 40);
+                                mPcmRecorder.startRecording(mPcmRecordListener);
+                            } catch (SpeechError e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        mIdVerifier.stopWrite("ivp");
+                        if (null != mPcmRecorder) {
+                            mPcmRecorder.stopRecord(true);
+                        }
+//                        recordImv.setImageResource(R.drawable.ic_recorder);
+                        break;
+                }
                 return false;
             }
         });
     }
 
+
     private void vocalVerify() {
 
         StringBuffer strBuffer = new StringBuffer();
+        mVerifyNumPwd = VerifierUtil.generateNumberPassword(8);
         strBuffer.append("您的验证密码：" + mVerifyNumPwd + "\n");
         strBuffer.append("请长按“按住说话”按钮进行验证！\n");
         tipTxv.setText(strBuffer.toString());
@@ -333,8 +357,10 @@ public class VoiceConfigActivity extends AppCompatActivity {
     private void executeModelCommand(String cmd) {
         if ("query".equals(cmd)) {
             mProDialog.setMessage("查询中...");
+            mModelCmd = MODEL_QUE;
         } else if ("delete".equals(cmd)) {
             mProDialog.setMessage("删除中...");
+            mModelCmd = MODEL_DEL;
         }
         mProDialog.show();
         // 设置声纹模型参数
@@ -411,11 +437,13 @@ public class VoiceConfigActivity extends AppCompatActivity {
     private void updateRegStatus() {
         int titleId = 0;
         int descId = 0;
+        boolean canUnreg = false;
         switch (mRegStatus) {
             case REG:
                 titleId = R.string.regged_title;
                 descId = R.string.regged_description;
                 mSST = SST_VERIFY;
+                canUnreg = true;
                 break;
             case UNREG:
                 titleId = R.string.unuregged_title;
@@ -430,11 +458,17 @@ public class VoiceConfigActivity extends AppCompatActivity {
         }
         final int finalTitleId = titleId;
         final int finalDescId = descId;
+        final boolean unRegBtnVisible = canUnreg;
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 statusTitleTxv.setText(finalTitleId);
                 statusDescTxv.setText(finalDescId);
+                if (unRegBtnVisible) {
+                    unRegBtn.setVisibility(View.VISIBLE);
+                } else {
+                    unRegBtn.setVisibility(View.GONE);
+                }
             }
         });
     }
@@ -568,6 +602,8 @@ public class VoiceConfigActivity extends AppCompatActivity {
                         if (mPcmRecorder != null) {
                             mPcmRecorder.stopRecord(true);
                         }
+                        mRegStatus = VoiceRegStatus.REG;
+                        updateRegStatus();
                     } else {
                         int nowTimes = suc + 1;
                         int leftTimes = 5 - nowTimes;

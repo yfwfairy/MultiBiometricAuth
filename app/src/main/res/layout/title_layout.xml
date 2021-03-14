@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:elevation="4dp"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/straw_yellow">
 
     <Button
         android:id="@+id/back_button"
