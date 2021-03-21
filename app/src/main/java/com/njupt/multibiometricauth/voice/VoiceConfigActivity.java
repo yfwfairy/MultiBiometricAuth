@@ -48,11 +48,11 @@ public class VoiceConfigActivity extends AppCompatActivity {
     private static final int PWD_TYPE_NUM = 3;
     private TextView statusTitleTxv;
     private TextView statusDescTxv;
+    private TextView volumeTxv;
     private TextView tipTxv;
     private Button backButton;
     private Button unRegBtn;
     private ConstraintLayout recordingContainer;
-    private TextView recordingHint;
     private Button recordImv;
     private MediaRecorder recorder=null;
     // 会话类型
@@ -143,6 +143,9 @@ public class VoiceConfigActivity extends AppCompatActivity {
         statusDescTxv = findViewById(R.id.status_desc);
         backButton = findViewById(R.id.back_button);
         unRegBtn = findViewById(R.id.unreg_btn);
+        volumeTxv = findViewById(R.id.recording_hint);
+        recordingContainer = findViewById(R.id.recording_container);
+
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -158,10 +161,10 @@ public class VoiceConfigActivity extends AppCompatActivity {
                 }
             }
         });
-        mToast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
-
+        mToast = Toast.makeText(this, "", Toast.LENGTH_LONG);
         mProDialog = new ProgressDialog(this);
         mProDialog.setCancelable(true);
+        mProDialog.setProgress(200);
         mProDialog.setTitle("请稍候");
         // cancel进度框时，取消正在进行的操作
         mProDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
@@ -184,13 +187,16 @@ public class VoiceConfigActivity extends AppCompatActivity {
                 }
                 switch (motionEvent.getAction()) {
                     case MotionEvent.ACTION_DOWN:
+                        recordingContainer.setVisibility(View.VISIBLE);
                         if (!isStartWork) {
+
 //                            recordImv.setImageResource(R.drawable.micro);
                             if (mSST == SST_ENROLL) {
                                 if (mNumPwdSegs == null) {
                                     downloadPwd();
                                     break;
                                 }
+
                                 vocalEnroll();
                             } else if (mSST == SST_VERIFY) {
                                 vocalVerify();
@@ -215,6 +221,7 @@ public class VoiceConfigActivity extends AppCompatActivity {
                         if (null != mPcmRecorder) {
                             mPcmRecorder.stopRecord(true);
                         }
+                        recordingContainer.setVisibility(View.INVISIBLE);
 //                        recordImv.setImageResource(R.drawable.ic_recorder);
                         break;
                 }
@@ -273,7 +280,7 @@ public class VoiceConfigActivity extends AppCompatActivity {
         @Override
         public void onEvent(int eventType, int arg1, int arg2, Bundle obj) {
             if (SpeechEvent.EVENT_VOLUME == eventType) {
-                showTip("音量：" + arg1);
+                volumeTxv.setText("音量：" + arg1);
             } else if (SpeechEvent.EVENT_VAD_EOS == eventType) {
                 showTip("录音结束");
             }
@@ -316,7 +323,7 @@ public class VoiceConfigActivity extends AppCompatActivity {
     public void reminderClicked(View view){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("提示");
-        builder.setMessage("提供语音录入和语音验证功能，目前只支持数字密码！");
+        builder.setMessage("  提供语音录入和语音验证功能，目前只支持数字密码！");
         builder.setPositiveButton("我知道了", null);
         builder.create() .show();
     }
@@ -626,7 +633,7 @@ public class VoiceConfigActivity extends AppCompatActivity {
         @Override
         public void onEvent(int eventType, int arg1, int arg2, Bundle bundle) {
             if (SpeechEvent.EVENT_VOLUME == eventType) {
-                showTip("音量：" + arg1);
+                volumeTxv.setText("音量：" + arg1);
             } else if (SpeechEvent.EVENT_VAD_EOS == eventType) {
                 showTip("录音结束");
             }

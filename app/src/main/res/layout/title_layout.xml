@@ -6,7 +6,7 @@
     android:elevation="4dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/straw_yellow">
+    android:background="@color/half_deep_yellow">
 
     <Button
         android:id="@+id/back_button"
@@ -25,6 +25,11 @@
         android:layout_height="wrap_content"
         android:text="Top Secret"
         android:textSize="25dp"
+        android:textColor="@color/brown"
+        android:shadowColor="@color/deep_yellow"
+        android:shadowRadius="10"
+        android:shadowDx="5"
+        android:shadowDy="5"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.081"

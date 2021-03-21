@@ -18,6 +18,10 @@
         android:layout_marginTop="150dp"
         android:text="MANAGEMENT"
         android:textColor="@color/brown"
+        android:shadowColor="@color/orange"
+        android:shadowRadius="10"
+        android:shadowDx="5"
+        android:shadowDy="5"
         android:textSize="40dp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -83,6 +87,7 @@
             android:layout_marginRight="20dp"
             android:layout_marginLeft="20dp"
             android:background="@drawable/select_background"
+            android:onClick="faceRegClicked"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/constraintLayout2">
 
@@ -117,6 +122,7 @@
             android:layout_marginTop="50dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
+            android:onClick="fingerRegClicked"
             android:background="@drawable/select_background"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

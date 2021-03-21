@@ -1,17 +1,29 @@
 <resources>
     <string name="app_name">TopSecret</string>
+
+    <!--讯飞声纹注册检测-->
     <string name="xf_app_id">60434b36</string>
     <string name="reg_uninit">点此初始化</string>
     <string name="reg_tip">点此获取注册密码</string>
-    <string name="unreg_tip">已注册声纹，点击下方验证或点此重新注册声纹</string>
+    <string name="unreg_tip">已注册声纹，点击“长按录音”验证</string>
     <string name="reg_error">注册失败</string>
 
     <string name="regged_title">已注册</string>
-    <string name="regged_description">长按下方验证或重新注册声纹</string>
+    <string name="regged_description">点击“长按录音”验证</string>
 
     <string name="unuregged_title">未注册</string>
     <string name="unregged_description">长按录音注册声纹</string>
 
     <string name="initfailed_title">初始化失败</string>
     <string name="initfailed_description">请检查相关配置</string>
+
+
+    <!--虹软引擎初始化-->
+    <string name="library_not_found">未找到库文件，请检查是否有将.so文件放至工程的 app\\src\\main\\jniLibs 目录下</string>
+    <string name="active_success">激活引擎成功</string>
+    <string name="already_activated">引擎已激活，无需再次激活</string>
+    <string name="active_failed">引擎激活失败，错误码为 %d</string>
+    <!--各个界面获取权限失败时的提示-->
+    <string name="permission_denied">权限被拒绝！</string>
+
 </resources>
