@@ -21,4 +21,5 @@
     <color name="gray">#ABABAB</color>
     <color name="gray_half">#40ABABAB</color>
     <color name="half_deep_yellow">#88EEB422</color>
+    <color name="color_bg_name">#80000000</color>
 </resources>
