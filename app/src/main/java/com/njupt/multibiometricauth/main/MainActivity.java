@@ -10,11 +10,14 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.njupt.multibiometricauth.Constants;
+import com.njupt.multibiometricauth.MMAApplication;
 import com.njupt.multibiometricauth.R;
 
 public class MainActivity extends AppCompatActivity {
@@ -30,10 +33,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         initUI();
         requestPermissions();
-//        Intent intent = getIntent();
-//        if (intent != null) {
-//            saveLoginInfo(intent);
-//        }
+        Intent intent = getIntent();
+        if (intent != null) {
+            saveLoginInfo(intent);
+        }
     }
 
     private void initUI() {
@@ -97,14 +100,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-//    public void saveLoginInfo(Intent intent) {
-//        String phoneNumber = intent.getStringExtra(Constants.PHONE);
-//        String userName = intent.getStringExtra(Constants.USERNAME);
-//        if (!TextUtils.isEmpty(phoneNumber)) {
-//            ((MMAApplication)getApplication()).setProp(Constants.PHONE, phoneNumber);
-//        }
-//        if (!TextUtils.isEmpty(userName)) {
-//            ((MMAApplication)getApplication()).setProp(Constants.USERNAME, userName);
-//        }
-//    }
+    public void saveLoginInfo(Intent intent) {
+        String phoneNumber = intent.getStringExtra(Constants.PHONE);
+        String userName = intent.getStringExtra(Constants.USERNAME);
+        if (!TextUtils.isEmpty(phoneNumber)) {
+            ((MMAApplication)getApplication()).setProp(Constants.PHONE, phoneNumber);
+        }
+        if (!TextUtils.isEmpty(userName)) {
+            ((MMAApplication)getApplication()).setProp(Constants.USERNAME, userName);
+        }
+    }
 }

@@ -7,6 +7,7 @@ import android.hardware.Camera;
 import android.os.Build;
 import android.os.Bundle;
 
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
@@ -29,6 +30,8 @@ import com.arcsoft.face.GenderInfo;
 import com.arcsoft.face.LivenessInfo;
 import com.arcsoft.face.enums.DetectFaceOrientPriority;
 import com.arcsoft.face.enums.DetectMode;
+import com.njupt.multibiometricauth.Constants;
+import com.njupt.multibiometricauth.MMAApplication;
 import com.njupt.multibiometricauth.R;
 import com.njupt.multibiometricauth.face.faceserver.CompareResult;
 import com.njupt.multibiometricauth.face.faceserver.FaceServer;
@@ -519,9 +522,9 @@ public class RegisterAndRecognizeActivity extends BaseActivity implements ViewTr
             Observable.create(new ObservableOnSubscribe<Boolean>() {
                 @Override
                 public void subscribe(ObservableEmitter<Boolean> emitter) {
-
+                    String userName = ((MMAApplication)getApplication()).getProp(Constants.USERNAME);
                     boolean success = FaceServer.getInstance().registerNv21(RegisterAndRecognizeActivity.this, nv21.clone(), previewSize.width, previewSize.height,
-                            facePreviewInfoList.get(0).getFaceInfo(), "registered " + faceHelper.getTrackedFaceCount());
+                            facePreviewInfoList.get(0).getFaceInfo(), TextUtils.isEmpty(userName) ? "registered " + faceHelper.getTrackedFaceCount() : userName);
                     emitter.onNext(success);
                 }
             })
