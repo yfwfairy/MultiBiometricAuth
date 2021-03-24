@@ -93,7 +93,7 @@ public class FaceConfigActivity extends BaseActivity {
     }
 
     public void jumpToIdentifyActivity(View view){
-        Intent intent = new Intent(this, IdentifyActivity.class);
+        Intent intent = new Intent(this, RegisterAndRecognizeActivity.class);
         startActivity(intent);
     }
 

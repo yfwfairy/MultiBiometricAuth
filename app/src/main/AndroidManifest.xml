@@ -13,6 +13,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- 配置权限，用来记录应用配置信息 -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- 如需使用人脸识别，还要添加：摄相头权限，拍照需要用到 -->
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
         android:name=".MMAApplication"
@@ -42,6 +43,7 @@
         <activity android:name=".guide.IntroductoryActivity" />
         <activity android:name=".main.MainActivity" />
         <activity android:name=".guide.GuideActivity" />
+        <activity android:name=".face.RegisterAndRecognizeActivity"></activity>
     </application>
 
 </manifest>

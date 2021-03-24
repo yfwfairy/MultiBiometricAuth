@@ -7,8 +7,8 @@ public class Constants {
     public static String PHONE = "phoneNumber";
     public static String USERNAME = "userName";
 
-    public static String ArcSoftAppId = "AFauwf5FP3Ako93oRKH6LTPRFW1szy8r4TpzPWvTb9p";
-    public static String ArcSoft_SDK_KEY = "B5ake7FMMpy6q5UYo76ncns5xsvCqDSJi1kF6qZmQqb5";
+    public static String ArcSoftAppId = "8msTZJrbxCKhahPMjpK3wx3mAK57oymVqe9KfTwDy6fh";
+    public static String ArcSoft_SDK_KEY = "2Yd9AwvSk9gyxGUfqBMfKiuweoXqP55MZN2nDNt18Thg";
 
     /**
      * IR预览数据相对于RGB预览数据的横向偏移量，注意：是预览数据，一般的摄像头的预览数据都是 width > height
