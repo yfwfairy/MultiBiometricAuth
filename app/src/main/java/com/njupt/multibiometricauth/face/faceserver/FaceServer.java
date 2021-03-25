@@ -3,6 +3,7 @@ package com.njupt.multibiometricauth.face.faceserver;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.arcsoft.face.ErrorInfo;
@@ -24,6 +25,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -134,6 +136,24 @@ public class FaceServer {
         }
     }
 
+    /**
+     * 判断该用户是否注册了人脸信息
+     * @param usrName
+     * @return
+     */
+    public boolean isUserFaceExist(String usrName) {
+        synchronized (this) {
+            if (faceRegisterInfoList != null) {
+                for (FaceRegisterInfo info : faceRegisterInfoList) {
+                    if (info.getName() != null && info.getName().equals(usrName)) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+    }
+
     public int getFaceNumber(Context context) {
         synchronized (this) {
             if (context == null) {
@@ -156,6 +176,59 @@ public class FaceServer {
                 imageCount = imageFiles == null ? 0 : imageFiles.length;
             }
             return featureCount > imageCount ? imageCount : featureCount;
+        }
+    }
+
+    public boolean deleteUsrFaceInfo(String usrName, Context context) {
+        synchronized (this) {
+            if (context == null || TextUtils.isEmpty(usrName)) {
+                return false;
+            }
+            if (ROOT_PATH == null) {
+                ROOT_PATH = context.getFilesDir().getAbsolutePath();
+            }
+            boolean res = false;
+            if (faceRegisterInfoList != null) {
+                Iterator<FaceRegisterInfo> iterator = faceRegisterInfoList.iterator();
+                while (iterator.hasNext()) {
+                    FaceRegisterInfo info = iterator.next();
+                    if (info != null && usrName.equals(info.getName())) {
+                        iterator.remove();
+                        res = true;
+                        break;
+                    }
+                }
+            }
+
+
+            File featureFileDir = new File(ROOT_PATH + File.separator + SAVE_FEATURE_DIR);
+            if (featureFileDir.exists() && featureFileDir.isDirectory()) {
+                File[] featureFiles = featureFileDir.listFiles();
+                if (featureFiles != null && featureFiles.length > 0) {
+                    for (File featureFile : featureFiles) {
+                        if (usrName.equals(featureFile.getName())) {
+                            Log.d(TAG, "deleteUsrFaceInfo: featureFile:" + featureFile.getName());
+                            res &= true;
+                            featureFile.delete();
+                        }
+                    }
+                }
+            }
+
+            File imgFileDir = new File(ROOT_PATH + File.separator + SAVE_IMG_DIR);
+            if (imgFileDir.exists() && imgFileDir.isDirectory()) {
+                File[] imgFiles = imgFileDir.listFiles();
+                if (imgFiles != null && imgFiles.length > 0) {
+                    for (File imgFile : imgFiles) {
+                        if (imgFile.getName() != null && imgFile.getName().equals(usrName + IMG_SUFFIX)) {
+                            Log.d(TAG, "deleteUsrFaceInfo: imgFile:" + imgFile.getName());
+                            res &= true;
+                            imgFile.delete();
+                        }
+                    }
+                }
+            }
+            return res;
         }
     }
 

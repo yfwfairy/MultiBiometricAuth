@@ -13,8 +13,10 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -126,7 +128,12 @@ public class RegisterAndRecognizeActivity extends BaseActivity implements ViewTr
      */
     private static final int REGISTER_STATUS_DONE = 2;
 
-    private int registerStatus = REGISTER_STATUS_DONE;
+    /**
+     * 注册人脸状态码，已注册
+     */
+    private static final int REGISTER_STATUS_ALREADY_REG = 3;
+
+    private int registerStatus;
     /**
      * 用于记录人脸识别相关状态
      */
@@ -156,6 +163,8 @@ public class RegisterAndRecognizeActivity extends BaseActivity implements ViewTr
     private FaceRectView faceRectView;
 
     private Switch switchLivenessDetect;
+
+    private Button regOrUnregBtn;
 
     private static final int ACTION_REQUEST_PERMISSIONS = 0x001;
     /**
@@ -188,8 +197,30 @@ public class RegisterAndRecognizeActivity extends BaseActivity implements ViewTr
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
         //本地人脸库初始化
         FaceServer.getInstance().init(this);
-
         initView();
+        initOrRefreshRegisterStatus();
+    }
+
+    private void initOrRefreshRegisterStatus() {
+        String userName = ((MMAApplication)getApplication()).getProp(Constants.USERNAME);
+        boolean alreadyRegged = FaceServer.getInstance().isUserFaceExist(userName);
+        if (alreadyRegged) {
+            registerStatus = REGISTER_STATUS_ALREADY_REG;
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    regOrUnregBtn.setText(R.string.unreg_face);
+                }
+            });
+        } else {
+            registerStatus = REGISTER_STATUS_DONE;
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    regOrUnregBtn.setText(R.string.register_face);
+                }
+            });
+        }
     }
 
     private void initView() {
@@ -214,6 +245,7 @@ public class RegisterAndRecognizeActivity extends BaseActivity implements ViewTr
         int spanCount = (int) (dm.widthPixels / (getResources().getDisplayMetrics().density * 100 + 0.5f));
         recyclerShowFaceInfo.setLayoutManager(new GridLayoutManager(this, spanCount));
         recyclerShowFaceInfo.setItemAnimator(new DefaultItemAnimator());
+        regOrUnregBtn = findViewById(R.id.regOrUnregBtn);
     }
 
     /**
@@ -541,6 +573,7 @@ public class RegisterAndRecognizeActivity extends BaseActivity implements ViewTr
                             String result = success ? "register success!" : "register failed!";
                             showToast(result);
                             registerStatus = REGISTER_STATUS_DONE;
+                            initOrRefreshRegisterStatus();
                         }
 
                         @Override
@@ -724,8 +757,15 @@ public class RegisterAndRecognizeActivity extends BaseActivity implements ViewTr
      *
      * @param view 注册按钮
      */
-    public void register(View view) {
-        if (registerStatus == REGISTER_STATUS_DONE) {
+    public void registerOrUnreg(View view) {
+        if (registerStatus == REGISTER_STATUS_ALREADY_REG) {
+            String userName = ((MMAApplication)getApplication()).getProp(Constants.USERNAME);
+            boolean unRegRes = FaceServer.getInstance().deleteUsrFaceInfo(userName, this);
+            if (unRegRes) {
+                registerStatus = REGISTER_STATUS_DONE;
+                initOrRefreshRegisterStatus();
+            }
+        } else if (registerStatus == REGISTER_STATUS_DONE) {
             registerStatus = REGISTER_STATUS_READY;
         }
     }
