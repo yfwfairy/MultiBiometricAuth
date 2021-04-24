@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".guide.IntroductoryActivity"
-    android:background="@color/yellow">
+    android:background="@color/yellow_2">
 
     <ImageView
         android:id="@+id/intro_img"
@@ -41,9 +41,14 @@
         app:lottie_autoPlay="true"
         app:lottie_rawRes="@raw/introduction" />
 
-    <com.cuberto.liquid_swipe.LiquidPager
+    <androidx.viewpager.widget.ViewPager
         android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+
+<!--    <com.cuberto.liquid_swipe.LiquidPager-->
+<!--        android:id="@+id/pager"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"/>-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

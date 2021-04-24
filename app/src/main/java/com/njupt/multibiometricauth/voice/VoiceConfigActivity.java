@@ -577,7 +577,7 @@ public class VoiceConfigActivity extends AppCompatActivity {
         // 设置会话类型
         mIdVerifier.setParameter(SpeechConstant.MFV_SST, "enroll");
 //     // 用户id
-//      mIdVerifier.setParameter(SpeechConstant.AUTH_ID, authid);
+        mIdVerifier.setParameter(SpeechConstant.AUTH_ID, getPhoneNumber());
         // 设置监听器，开始会话
         mIdVerifier.startWorking(mEnrollListener);
     }

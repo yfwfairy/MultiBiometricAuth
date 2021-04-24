@@ -25,6 +25,7 @@ allprojects {
         repositories {
             maven {
                 name = "GitHubPackages"
+
                 url = uri("https://maven.pkg.github.com/Cuberto/liquid-swipe-android")
                 credentials {
                     /** Create github.properties in root project folder file with

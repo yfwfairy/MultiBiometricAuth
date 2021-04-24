@@ -74,13 +74,17 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.551" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <TextView
         android:id="@+id/next"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/white"
-        android:elevation="35dp"
-        android:src="@drawable/nextt"
+        android:onClick="nextClicked"
+        android:text="点此进入"
+        android:shadowColor="@color/yellow_half"
+        android:shadowRadius="5"
+        android:shadowDx="10"
+        android:shadowDy="10"
+        android:textColor="@color/yellow"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.9"
