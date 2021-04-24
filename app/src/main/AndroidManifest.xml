@@ -34,13 +34,15 @@
             android:name=".voice.VoiceConfigActivity"
             android:launchMode="singleTask" />
         <activity android:name=".loginsign.LoginActivity">
+
+        </activity>
+        <activity android:name=".guide.IntroductoryActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".guide.IntroductoryActivity" />
         <activity android:name=".main.MainActivity" />
         <activity android:name=".guide.GuideActivity" />
         <activity android:name=".face.RegisterAndRecognizeActivity"></activity>

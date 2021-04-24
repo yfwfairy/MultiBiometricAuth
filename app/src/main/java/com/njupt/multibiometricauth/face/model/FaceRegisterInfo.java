@@ -24,4 +24,4 @@ public class FaceRegisterInfo {
     public void setFeatureData(byte[] featureData) {
         this.featureData = featureData;
     }
-}
+} 
