@@ -1,17 +1,15 @@
 package com.njupt.multibiometricauth.face;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.app.ActivityCompat;
 import android.Manifest;
-
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
 
 import com.arcsoft.face.ActiveFileInfo;
 import com.arcsoft.face.ErrorInfo;
@@ -25,19 +23,16 @@ import com.njupt.multibiometricauth.R;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
-
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 
-
 public class FaceConfigActivity extends BaseActivity {
 
-    private ConstraintLayout layoutOn,layoutSelect;
+    private ConstraintLayout layoutSelect;
     private Button backBut;
-    private FloatingActionButton activeBut;
     private static final String TAG = "FaceConfigActivity";
     private static final int ACTION_REQUEST_PERMISSIONS = 0x001;
     // 在线激活所需的权限
@@ -61,12 +56,11 @@ public class FaceConfigActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_face_config);
         initUI();
+        activeEngine();
     }
 
     private void initUI() {
         layoutSelect = findViewById(R.id.layoutSelect);
-        layoutOn = findViewById(R.id.layout);
-        activeBut = findViewById(R.id.initEng);
         backBut = findViewById(R.id.back_button);
         backBut.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,7 +70,8 @@ public class FaceConfigActivity extends BaseActivity {
         });
 
     }
-    public void reminderClicked(View view){
+
+    public void reminderClicked(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("提示");
         builder.setMessage("  提供人脸录入和验证，激活引擎后可以进行人脸属性检测和人脸识别功能。");
@@ -84,15 +79,15 @@ public class FaceConfigActivity extends BaseActivity {
         builder.create().show();
     }
 
-    public void jumpToAttributeActivity(View view){
-        MyDialog myDialog  =new MyDialog(this,MyDialog.PICK_AVATAR);
+    public void jumpToAttributeActivity(View view) {
+        MyDialog myDialog = new MyDialog(this, MyDialog.PICK_AVATAR);
         myDialog.show();
 
 //        Intent intent = new Intent(this, AttributeActivity.class);
 //        startActivity(intent);
     }
 
-    public void jumpToIdentifyActivity(View view){
+    public void jumpToIdentifyActivity(View view) {
         Intent intent = new Intent(this, RegisterAndRecognizeActivity.class);
         startActivity(intent);
     }
@@ -100,9 +95,8 @@ public class FaceConfigActivity extends BaseActivity {
     /**
      * 激活引擎
      *
-     * @param view
      */
-    public void activeEngine(final View view) {
+    public void activeEngine() {
         if (!libraryExists) {
             showToast(getString(R.string.library_not_found));
             return;
@@ -110,9 +104,6 @@ public class FaceConfigActivity extends BaseActivity {
         if (!checkPermissions(NEEDED_PERMISSIONS)) {
             ActivityCompat.requestPermissions(this, NEEDED_PERMISSIONS, ACTION_REQUEST_PERMISSIONS);
             return;
-        }
-        if (view != null) {
-            view.setClickable(false);
         }
         Observable.create(new ObservableOnSubscribe<Integer>() {
             @Override
@@ -139,18 +130,11 @@ public class FaceConfigActivity extends BaseActivity {
                     public void onNext(Integer activeCode) {
                         if (activeCode == ErrorInfo.MOK) {
                             showToast(getString(R.string.active_success));
-                            layoutOn.setVisibility(View.INVISIBLE);
-                            layoutSelect.setVisibility(View.VISIBLE);
                         } else if (activeCode == ErrorInfo.MERR_ASF_ALREADY_ACTIVATED) {
-                            layoutSelect.setVisibility(View.VISIBLE);
-                            layoutOn.setVisibility(View.INVISIBLE);
                             showToast(getString(R.string.already_activated));
                         } else {
                             showToast(getString(R.string.active_failed, activeCode));
-                        }
-
-                        if (view != null) {
-                            view.setClickable(true);
+                            layoutSelect.setVisibility(View.VISIBLE);
                         }
                         ActiveFileInfo activeFileInfo = new ActiveFileInfo();
                         int res = FaceEngine.getActiveFileInfo(FaceConfigActivity.this, activeFileInfo);
@@ -163,9 +147,6 @@ public class FaceConfigActivity extends BaseActivity {
                     @Override
                     public void onError(Throwable e) {
                         showToast(e.getMessage());
-                        if (view != null) {
-                            view.setClickable(true);
-                        }
                     }
 
                     @Override
@@ -176,11 +157,12 @@ public class FaceConfigActivity extends BaseActivity {
                 });
 
     }
+
     @Override
     void afterRequestPermission(int requestCode, boolean isAllGranted) {
         if (requestCode == ACTION_REQUEST_PERMISSIONS) {
             if (isAllGranted) {
-                activeEngine(null);
+                activeEngine();
             } else {
                 showToast(getString(R.string.permission_denied));
             }
