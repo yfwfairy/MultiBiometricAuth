@@ -46,6 +46,7 @@
             android:layout_marginLeft="20dp"
             android:layout_marginTop="80dp"
             android:layout_marginRight="20dp"
+            android:onClick="faceWithVoice"
             android:layout_weight="1"
             android:background="@drawable/select_background"
             app:layout_constraintEnd_toEndOf="parent"

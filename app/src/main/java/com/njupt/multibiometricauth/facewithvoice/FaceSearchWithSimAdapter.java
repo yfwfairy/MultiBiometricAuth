@@ -1,4 +1,4 @@
-package com.njupt.multibiometricauth.face.widget;
+package com.njupt.multibiometricauth.facewithvoice;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -18,11 +18,11 @@ import com.njupt.multibiometricauth.face.faceserver.FaceServer;
 import java.io.File;
 import java.util.List;
 
-public class FaceSearchResultAdapter extends RecyclerView.Adapter<com.njupt.multibiometricauth.face.widget.FaceSearchResultAdapter.CompareResultHolder> {
+class FaceSearchWithSimAdapter extends RecyclerView.Adapter<FaceSearchWithSimAdapter.CompareResultHolder> {
     private List<CompareResult> compareResultList;
     private LayoutInflater inflater;
 
-    public FaceSearchResultAdapter(List<CompareResult> compareResultList, Context context) {
+    public FaceSearchWithSimAdapter(List<CompareResult> compareResultList, Context context) {
         inflater = LayoutInflater.from(context);
         this.compareResultList = compareResultList;
     }
@@ -30,10 +30,11 @@ public class FaceSearchResultAdapter extends RecyclerView.Adapter<com.njupt.mult
     @NonNull
     @Override
     public CompareResultHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = inflater.inflate(R.layout.recycler_item_search_result, null, false);
+        View itemView = inflater.inflate(R.layout.recycler_item_search_result_with_simi, null, false);
         CompareResultHolder compareResultHolder = new CompareResultHolder(itemView);
         compareResultHolder.textView = itemView.findViewById(R.id.tv_item_name);
         compareResultHolder.imageView = itemView.findViewById(R.id.iv_item_head_img);
+        compareResultHolder.simiTxv = itemView.findViewById(R.id.tv_item_simi);
         return compareResultHolder;
     }
 
@@ -47,6 +48,7 @@ public class FaceSearchResultAdapter extends RecyclerView.Adapter<com.njupt.mult
                 .load(imgFile)
                 .into(holder.imageView);
         holder.textView.setText(compareResultList.get(position).getUserName());
+        holder.simiTxv.setText("相似度:" + compareResultList.get(position).getSimilar());
     }
 
     @Override
@@ -58,6 +60,7 @@ public class FaceSearchResultAdapter extends RecyclerView.Adapter<com.njupt.mult
 
         TextView textView;
         ImageView imageView;
+        TextView simiTxv;
 
         CompareResultHolder(@NonNull View itemView) {
             super(itemView);

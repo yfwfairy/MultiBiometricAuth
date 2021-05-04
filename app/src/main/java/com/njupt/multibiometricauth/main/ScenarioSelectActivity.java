@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.njupt.multibiometricauth.Constants;
 import com.njupt.multibiometricauth.MMAApplication;
 import com.njupt.multibiometricauth.R;
+import com.njupt.multibiometricauth.facewithvoice.FaceWithVoiceActivity;
 
 public class ScenarioSelectActivity extends AppCompatActivity {
     TextView titleTextView;
@@ -29,6 +30,8 @@ public class ScenarioSelectActivity extends AppCompatActivity {
             saveLoginInfo(intent);
         }
     }
+
+
 
     private void initUI() {
         backBut = findViewById(R.id.back_button);
@@ -61,5 +64,10 @@ public class ScenarioSelectActivity extends AppCompatActivity {
         if (!TextUtils.isEmpty(userName)) {
             ((MMAApplication)getApplication()).setProp(Constants.USERNAME, userName);
         }
+    }
+
+    public void faceWithVoice(View view) {
+        Intent intent = new Intent(this, FaceWithVoiceActivity.class);
+        startActivity(intent);
     }
 }

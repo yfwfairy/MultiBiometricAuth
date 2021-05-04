@@ -543,6 +543,32 @@ public class FaceServer {
         return null;
     }
 
+
+    /**
+     * 在特征库中搜索,给出相似度大于s的结果集合
+     *
+     * @param faceFeature 传入特征数据
+     * @return 比对结果
+     */
+    public List<CompareResult> getTopNOfFaceLib(FaceFeature faceFeature, float s) {
+        List<CompareResult> resList = new ArrayList<>();
+        if (faceEngine == null || isProcessing || faceFeature == null || faceRegisterInfoList == null || faceRegisterInfoList.size() == 0) {
+            return resList;
+        }
+        FaceFeature tempFaceFeature = new FaceFeature();
+        FaceSimilar faceSimilar = new FaceSimilar();
+        isProcessing = true;
+        for (int i = 0; i < faceRegisterInfoList.size(); i++) {
+            tempFaceFeature.setFeatureData(faceRegisterInfoList.get(i).getFeatureData());
+            faceEngine.compareFaceFeature(faceFeature, tempFaceFeature, faceSimilar);
+            if (faceSimilar.getScore() >= s) {
+                resList.add(new CompareResult(faceRegisterInfoList.get(i).getName(), faceSimilar.getScore()));
+            }
+        }
+        isProcessing = false;
+        return resList;
+    }
+
     /**
      * 将图像中需要截取的Rect向外扩张一倍，若扩张一倍会溢出，则扩张到边界，若Rect已溢出，则收缩到边界
      *
