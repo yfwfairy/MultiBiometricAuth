@@ -24,8 +24,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         android:windowSoftInputMode="stateVisible|adjustResize">
-        <activity android:name=".face.IdentifyActivity"></activity>
-        <activity android:name=".face.AttributeActivity" />
+        <activity android:name=".face.PhotoRegisterAndRecognizeActivity"></activity>
         <activity android:name=".finger.FingerConfigActivity" />
         <activity android:name=".face.FaceConfigActivity" />
         <activity android:name=".main.ScenarioSelectActivity" />
@@ -33,19 +32,17 @@
         <activity
             android:name=".voice.VoiceConfigActivity"
             android:launchMode="singleTask" />
-        <activity android:name=".loginsign.LoginActivity">
-
-        </activity>
-        <activity android:name=".guide.IntroductoryActivity">
+        <activity android:name=".loginsign.LoginActivity" />
+        <activity android:name=".guide.IntroductoryActivity"></activity>
+        <activity android:name=".main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".main.MainActivity" />
         <activity android:name=".guide.GuideActivity" />
-        <activity android:name=".face.RegisterAndRecognizeActivity"></activity>
+        <activity android:name=".face.CameraRegisterAndRecognizeActivity"></activity>
     </application>
 
 </manifest>

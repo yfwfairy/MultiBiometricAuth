@@ -62,12 +62,15 @@
         android:id="@+id/status_desc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
         android:text="@string/initfailed_description"
         android:textColor="@color/red_half"
         android:textSize="15sp"
+        app:layout_constraintBottom_toTopOf="@+id/unreg_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.44"
         app:layout_constraintStart_toStartOf="@+id/status_txv"
-        app:layout_constraintTop_toBottomOf="@+id/status_txv" />
+        app:layout_constraintTop_toBottomOf="@+id/record_button"
+        app:layout_constraintVertical_bias="0.0" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/recording_container"
@@ -156,10 +159,10 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.494"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/record_button"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.548" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

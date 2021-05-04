@@ -16,7 +16,6 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
-import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -68,7 +67,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
-public class RegisterAndRecognizeActivity extends BaseActivity implements ViewTreeObserver.OnGlobalLayoutListener {
+public class CameraRegisterAndRecognizeActivity extends BaseActivity implements ViewTreeObserver.OnGlobalLayoutListener {
     private static final String TAG = "RegisterAndRecognize";
     private static final int MAX_DETECT_NUM = 10;
     /**
@@ -162,7 +161,6 @@ public class RegisterAndRecognizeActivity extends BaseActivity implements ViewTr
      */
     private FaceRectView faceRectView;
 
-    private Switch switchLivenessDetect;
 
     private Button regOrUnregBtn;
 
@@ -229,14 +227,7 @@ public class RegisterAndRecognizeActivity extends BaseActivity implements ViewTr
         previewView.getViewTreeObserver().addOnGlobalLayoutListener(this);
 
         faceRectView = findViewById(R.id.single_camera_face_rect_view);
-        switchLivenessDetect = findViewById(R.id.single_camera_switch_liveness_detect);
-        switchLivenessDetect.setChecked(livenessDetect);
-        switchLivenessDetect.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                livenessDetect = isChecked;
-            }
-        });
+
         RecyclerView recyclerShowFaceInfo = findViewById(R.id.single_camera_recycler_view_person);
         compareResultList = new ArrayList<>();
         adapter = new FaceSearchResultAdapter(compareResultList, this);
@@ -471,7 +462,7 @@ public class RegisterAndRecognizeActivity extends BaseActivity implements ViewTr
                             .flQueueSize(MAX_DETECT_NUM)
                             .previewSize(previewSize)
                             .faceListener(faceListener)
-                            .trackedFaceCount(trackedFaceCount == null ? ConfigUtil.getTrackedFaceCount(RegisterAndRecognizeActivity.this.getApplicationContext()) : trackedFaceCount)
+                            .trackedFaceCount(trackedFaceCount == null ? ConfigUtil.getTrackedFaceCount(CameraRegisterAndRecognizeActivity.this.getApplicationContext()) : trackedFaceCount)
                             .build();
                 }
             }
@@ -555,7 +546,7 @@ public class RegisterAndRecognizeActivity extends BaseActivity implements ViewTr
                 @Override
                 public void subscribe(ObservableEmitter<Boolean> emitter) {
                     String userName = ((MMAApplication)getApplication()).getProp(Constants.USERNAME);
-                    boolean success = FaceServer.getInstance().registerNv21(RegisterAndRecognizeActivity.this, nv21.clone(), previewSize.width, previewSize.height,
+                    boolean success = FaceServer.getInstance().registerNv21(CameraRegisterAndRecognizeActivity.this, nv21.clone(), previewSize.width, previewSize.height,
                             facePreviewInfoList.get(0).getFaceInfo(), TextUtils.isEmpty(userName) ? "registered " + faceHelper.getTrackedFaceCount() : userName);
                     emitter.onNext(success);
                 }

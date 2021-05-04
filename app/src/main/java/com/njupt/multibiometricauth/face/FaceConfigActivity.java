@@ -15,7 +15,6 @@ import com.arcsoft.face.ActiveFileInfo;
 import com.arcsoft.face.ErrorInfo;
 import com.arcsoft.face.FaceEngine;
 import com.arcsoft.face.enums.RuntimeABI;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.njupt.multibiometricauth.Constants;
 import com.njupt.multibiometricauth.MyDialog;
 import com.njupt.multibiometricauth.R;
@@ -31,8 +30,6 @@ import io.reactivex.schedulers.Schedulers;
 
 public class FaceConfigActivity extends BaseActivity {
 
-    private ConstraintLayout layoutSelect;
-    private Button backBut;
     private static final String TAG = "FaceConfigActivity";
     private static final int ACTION_REQUEST_PERMISSIONS = 0x001;
     // 在线激活所需的权限
@@ -54,22 +51,11 @@ public class FaceConfigActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_face_config);
-        initUI();
+
         activeEngine();
     }
 
-    private void initUI() {
-        layoutSelect = findViewById(R.id.layoutSelect);
-        backBut = findViewById(R.id.back_button);
-        backBut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
 
-    }
 
     public void reminderClicked(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -88,7 +74,7 @@ public class FaceConfigActivity extends BaseActivity {
     }
 
     public void jumpToIdentifyActivity(View view) {
-        Intent intent = new Intent(this, RegisterAndRecognizeActivity.class);
+        Intent intent = new Intent(this, CameraRegisterAndRecognizeActivity.class);
         startActivity(intent);
     }
 
@@ -134,7 +120,7 @@ public class FaceConfigActivity extends BaseActivity {
                             showToast(getString(R.string.already_activated));
                         } else {
                             showToast(getString(R.string.active_failed, activeCode));
-                            layoutSelect.setVisibility(View.VISIBLE);
+
                         }
                         ActiveFileInfo activeFileInfo = new ActiveFileInfo();
                         int res = FaceEngine.getActiveFileInfo(FaceConfigActivity.this, activeFileInfo);

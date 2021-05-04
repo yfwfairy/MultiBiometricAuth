@@ -63,7 +63,7 @@
     <TextView
         android:layout_width="230dp"
         android:layout_height="80dp"
-        android:text=" It can be applied in different scenarios"
+        android:text=" 全场景下应用"
         android:textColor="@color/white"
         android:textSize="20sp"
         android:textStyle="italic"

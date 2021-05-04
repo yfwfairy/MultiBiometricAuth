@@ -39,9 +39,9 @@
 
     <TextView
         android:id="@+id/textView2"
-        android:layout_width="266dp"
-        android:layout_height="270dp"
-        android:text="Heterogeneous hardware environment"
+        android:layout_width="303dp"
+        android:layout_height="185dp"
+        android:text="支持异构硬件环境"
         android:textColor="@color/orange"
         android:textSize="35sp"
         android:textStyle="bold"

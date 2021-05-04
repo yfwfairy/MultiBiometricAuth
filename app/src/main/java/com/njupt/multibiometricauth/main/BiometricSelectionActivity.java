@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.njupt.multibiometricauth.Constants;
 import com.njupt.multibiometricauth.MMAApplication;
+import com.njupt.multibiometricauth.MyDialog;
 import com.njupt.multibiometricauth.R;
 import com.njupt.multibiometricauth.face.FaceConfigActivity;
 import com.njupt.multibiometricauth.voice.VoiceConfigActivity;
@@ -62,8 +63,8 @@ public class BiometricSelectionActivity extends AppCompatActivity {
     }
 
     public void faceRegClicked(View view){
-        Intent intent = new Intent(this, FaceConfigActivity.class);
-        startActivity(intent);
+        MyDialog myDialog = new MyDialog(this, MyDialog.PICK_AVATAR);
+        myDialog.show();
     }
 
     public void fingerRegClicked(View view){

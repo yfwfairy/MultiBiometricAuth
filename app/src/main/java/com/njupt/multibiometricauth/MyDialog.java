@@ -10,7 +10,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-import com.njupt.multibiometricauth.face.AttributeActivity;
+import com.njupt.multibiometricauth.face.CameraRegisterAndRecognizeActivity;
+import com.njupt.multibiometricauth.face.PhotoRegisterAndRecognizeActivity;
 
 public class MyDialog {
     public final static int PICK_AVATAR = 1;
@@ -52,7 +53,14 @@ public class MyDialog {
             mSelectCamera.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(mContext, AttributeActivity.class);
+                    Intent intent = new Intent(mContext, CameraRegisterAndRecognizeActivity.class);
+                    mContext.startActivity(intent);
+                }
+            });
+            mSelectPicture.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(mContext, PhotoRegisterAndRecognizeActivity.class);
                     mContext.startActivity(intent);
                 }
             });
