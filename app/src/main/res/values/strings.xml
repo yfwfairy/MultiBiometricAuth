@@ -26,8 +26,8 @@
     <!--各个界面获取权限失败时的提示-->
     <string name="permission_denied">权限被拒绝！</string>
 
-    <string name="register_face">注册人脸</string>
-    <string name="unreg_face">删除人脸数据</string>
+    <string name="register_face">拍照注册人脸</string>
+    <string name="unreg_face">已注册 点击删除人脸数据</string>
     <string name="switch_camera">切换摄像头</string>
     <string name="switch_camera_failed">switch camera failed</string>
     <string name="notice_change_detect_degree">camera switched, if no face detected, please change face detect degree in homepage</string>
@@ -35,7 +35,7 @@
     <string name="recognize_success_notice">PASS:%s</string>
     <string name="low_confidence_level">face low confidence level</string>
     <string name="specific_engine_init_failed">%s init failed, code is:%d</string>
-    <string name="liveness_detect">liveness detect</string>
+    <string name="liveness_detect">活体检测</string>
     <string name="camera_rgb">RGB CAMERA</string>
     <string name="camera_ir">IR CAMERA</string>
     <string name="camera_rgb_preview_size">RGB CAMERA\n%dx%d</string>

@@ -65,19 +65,6 @@ public class FaceConfigActivity extends BaseActivity {
         builder.create().show();
     }
 
-    public void jumpToAttributeActivity(View view) {
-        MyDialog myDialog = new MyDialog(this, MyDialog.PICK_AVATAR);
-        myDialog.show();
-
-//        Intent intent = new Intent(this, AttributeActivity.class);
-//        startActivity(intent);
-    }
-
-    public void jumpToIdentifyActivity(View view) {
-        Intent intent = new Intent(this, CameraRegisterAndRecognizeActivity.class);
-        startActivity(intent);
-    }
-
     /**
      * 激活引擎
      *

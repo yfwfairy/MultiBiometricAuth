@@ -15,7 +15,9 @@ import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -31,6 +33,7 @@ import com.arcsoft.face.GenderInfo;
 import com.arcsoft.face.LivenessInfo;
 import com.arcsoft.face.enums.DetectFaceOrientPriority;
 import com.arcsoft.face.enums.DetectMode;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.njupt.multibiometricauth.Constants;
 import com.njupt.multibiometricauth.MMAApplication;
 import com.njupt.multibiometricauth.R;
@@ -67,7 +70,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
-public class CameraRegisterAndRecognizeActivity extends BaseActivity implements ViewTreeObserver.OnGlobalLayoutListener {
+public class CameraRegisterAndRecognizeActivity extends FaceConfigActivity implements ViewTreeObserver.OnGlobalLayoutListener {
     private static final String TAG = "RegisterAndRecognize";
     private static final int MAX_DETECT_NUM = 10;
     /**
@@ -161,8 +164,9 @@ public class CameraRegisterAndRecognizeActivity extends BaseActivity implements 
      */
     private FaceRectView faceRectView;
 
-
-    private Button regOrUnregBtn;
+    private Switch switchLivenessDetect;
+    private FloatingActionButton regOrUnregBtn;
+    private TextView regOrUnregTex;
 
     private static final int ACTION_REQUEST_PERMISSIONS = 0x001;
     /**
@@ -207,7 +211,7 @@ public class CameraRegisterAndRecognizeActivity extends BaseActivity implements 
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    regOrUnregBtn.setText(R.string.unreg_face);
+                    regOrUnregTex.setText(R.string.unreg_face);
                 }
             });
         } else {
@@ -215,7 +219,7 @@ public class CameraRegisterAndRecognizeActivity extends BaseActivity implements 
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    regOrUnregBtn.setText(R.string.register_face);
+                    regOrUnregTex.setText(R.string.register_face);
                 }
             });
         }
@@ -227,7 +231,14 @@ public class CameraRegisterAndRecognizeActivity extends BaseActivity implements 
         previewView.getViewTreeObserver().addOnGlobalLayoutListener(this);
 
         faceRectView = findViewById(R.id.single_camera_face_rect_view);
-
+        switchLivenessDetect = findViewById(R.id.single_camera_switch_liveness_detect);
+        switchLivenessDetect.setChecked(livenessDetect);
+        switchLivenessDetect.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                livenessDetect = isChecked;
+            }
+        });
         RecyclerView recyclerShowFaceInfo = findViewById(R.id.single_camera_recycler_view_person);
         compareResultList = new ArrayList<>();
         adapter = new FaceSearchResultAdapter(compareResultList, this);
@@ -236,7 +247,9 @@ public class CameraRegisterAndRecognizeActivity extends BaseActivity implements 
         int spanCount = (int) (dm.widthPixels / (getResources().getDisplayMetrics().density * 100 + 0.5f));
         recyclerShowFaceInfo.setLayoutManager(new GridLayoutManager(this, spanCount));
         recyclerShowFaceInfo.setItemAnimator(new DefaultItemAnimator());
-        regOrUnregBtn = findViewById(R.id.regOrUnregBtn);
+        regOrUnregBtn = findViewById(R.id.camera);
+        regOrUnregTex = findViewById(R.id.reg_or_unreg);
+
     }
 
     /**
