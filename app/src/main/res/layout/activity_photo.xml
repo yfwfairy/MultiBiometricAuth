@@ -4,6 +4,87 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/intro_background"
     tools:context=".face.PhotoRegisterAndRecognizeActivity">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+        
+        <LinearLayout
+            android:layout_margin="10dp"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:background="@drawable/select_background">
+
+            <Button
+                android:id="@+id/bt_choose_main_image"
+                android:layout_width="180dp"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:layout_height="wrap_content"
+                android:onClick="chooseMainImage"
+                android:background="@drawable/ripple_item"
+                android:textColor="@color/brown"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:text="选择原图"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="15dp"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_margin="5dp"
+                    android:id="@+id/iv_main_image"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:minHeight="100dp"
+                    android:maxHeight="200dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tv_main_image_info"
+                    android:layout_margin="10dp"/>
+            </LinearLayout>
+
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/orange"/>
+        <LinearLayout
+            android:layout_margin="10dp"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:background="@drawable/select_background">
+            <Button
+                android:id="@+id/bt_add_item"
+                android:layout_width="180dp"
+                android:layout_height="wrap_content"
+                android:onClick="addItemFace"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/ripple_item"
+                android:textColor="@color/brown"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:text="添加对比图"/>
+            <androidx.recyclerview.widget.RecyclerView
+                android:minHeight="400dp"
+                android:layout_margin="15dp"
+                android:id="@+id/recycler_faces"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

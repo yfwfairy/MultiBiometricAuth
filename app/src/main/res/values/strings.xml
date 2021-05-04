@@ -23,16 +23,18 @@
     <string name="active_success">激活引擎成功</string>
     <string name="already_activated">引擎已激活，无需再次激活</string>
     <string name="active_failed">引擎激活失败，错误码为 %d</string>
+    <string name="engine_not_initialized">引擎未初始化，错误码为 %d</string>
     <!--各个界面获取权限失败时的提示-->
     <string name="permission_denied">权限被拒绝！</string>
 
+    <!--人脸比对1:n（视频） 界面-->
     <string name="register_face">拍照注册人脸</string>
     <string name="unreg_face">已注册 点击删除人脸数据</string>
     <string name="switch_camera">切换摄像头</string>
-    <string name="switch_camera_failed">switch camera failed</string>
-    <string name="notice_change_detect_degree">camera switched, if no face detected, please change face detect degree in homepage</string>
+    <string name="switch_camera_failed">转换摄像头失败</string>
+    <string name="notice_change_detect_degree">后置摄像头，若没有检测到人脸，请转换摄像头</string>
     <string name="recognize_failed_notice">DENIED:%s</string>
-    <string name="recognize_success_notice">PASS:%s</string>
+    <string name="recognize_success_notice">验证通过:%s</string>
     <string name="low_confidence_level">face low confidence level</string>
     <string name="specific_engine_init_failed">%s init failed, code is:%d</string>
     <string name="liveness_detect">活体检测</string>
@@ -43,5 +45,12 @@
     <string name="camera_error_notice">\npossible reason:open two cameras at the same time is not allowed on this device</string>
     <string name="draw_ir_rect_mirror_horizontal">draw IR face rect mirror horizontal</string>
     <string name="draw_ir_rect_mirror_vertical">draw IR face rect mirror vertical</string>
+
+    <!--人脸比对1:n（图片vs图片） 界面-->
+    <string name="choose_main_image">选择主图</string>
+    <string name="add_item_image">添加比对图</string>
+    <string name="notice_choose_main_img">请先选择主图</string>
+    <string name="compare_failed">比对失败，错误码为 %d</string>
+    <string name="get_picture_failed">获取图片失败</string>
 
 </resources>

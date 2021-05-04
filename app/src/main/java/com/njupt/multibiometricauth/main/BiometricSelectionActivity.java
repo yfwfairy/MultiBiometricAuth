@@ -15,6 +15,7 @@ import com.njupt.multibiometricauth.MMAApplication;
 import com.njupt.multibiometricauth.MyDialog;
 import com.njupt.multibiometricauth.R;
 import com.njupt.multibiometricauth.face.FaceConfigActivity;
+import com.njupt.multibiometricauth.finger.FingerConfigActivity;
 import com.njupt.multibiometricauth.voice.VoiceConfigActivity;
 
 public class BiometricSelectionActivity extends AppCompatActivity {
@@ -68,7 +69,7 @@ public class BiometricSelectionActivity extends AppCompatActivity {
     }
 
     public void fingerRegClicked(View view){
-        Intent intent = new Intent(this, FaceConfigActivity.class);
+        Intent intent = new Intent(this, FingerConfigActivity.class);
         startActivity(intent);
     }
 

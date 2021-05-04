@@ -25,7 +25,8 @@
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         android:windowSoftInputMode="stateVisible|adjustResize">
         <activity android:name=".facewithvoice.FaceWithVoiceActivity"></activity>
-        <activity android:name=".face.PhotoRegisterAndRecognizeActivity" />
+        <activity android:name=".face.PhotoRegisterAndRecognizeActivity"
+                  android:launchMode="singleTop"/>
         <activity android:name=".finger.FingerConfigActivity" />
         <activity android:name=".face.FaceConfigActivity" />
         <activity android:name=".main.ScenarioSelectActivity" />
