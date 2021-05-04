@@ -19,6 +19,7 @@ import com.airbnb.lottie.LottieAnimationView;
 import com.njupt.multibiometricauth.Constants;
 import com.njupt.multibiometricauth.MMAApplication;
 import com.njupt.multibiometricauth.R;
+import com.njupt.multibiometricauth.loginsign.LoginActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -60,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void selectMultiClicked(View view) {
-        Intent intent = new Intent(this, BiometricSelectionActivity.class);
+        Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
     }
     public void selectScenarioClicked(View view) {

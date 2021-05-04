@@ -29,6 +29,8 @@ public class MMAApplication extends Application {
     public synchronized void setProp(String key, String value) {
         propMap.put(key, value);
     }
+
+
 }
 
 

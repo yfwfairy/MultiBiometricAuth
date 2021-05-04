@@ -22,6 +22,7 @@ import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 
 import com.njupt.multibiometricauth.Constants;
+import com.njupt.multibiometricauth.main.BiometricSelectionActivity;
 import com.njupt.multibiometricauth.main.MainActivity;
 import com.njupt.multibiometricauth.R;
 import com.njupt.multibiometricauth.SQLite.User;
@@ -146,7 +147,7 @@ public class LoginTabFragment extends Fragment {
                 }
                 editor.commit();
                 Toast.makeText(getActivity(), "登录成功", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(getActivity(), MainActivity.class);
+                Intent intent = new Intent(getActivity(), BiometricSelectionActivity.class);
                 intent.putExtra(Constants.PHONE, user.getPhone());
                 intent.putExtra(Constants.USERNAME, user.getName());
                 startActivity(intent);
