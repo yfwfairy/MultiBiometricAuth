@@ -67,13 +67,7 @@ public class BiometricSelectionActivity extends AppCompatActivity {
         MyDialog myDialog = new MyDialog(this, MyDialog.PICK_AVATAR);
         myDialog.show();
     }
-
-    public void fingerRegClicked(View view){
-        Intent intent = new Intent(this, FingerConfigActivity.class);
-        startActivity(intent);
-    }
-
-
+    
 
     public void saveLoginInfo(Intent intent) {
         String phoneNumber = intent.getStringExtra(Constants.PHONE);
