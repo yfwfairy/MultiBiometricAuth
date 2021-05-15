@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import androidx.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,6 +69,59 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
         cursor.close();
         return userList;
     }
+
+    @Nullable
+    public String queryUserWithPhoneNumber(String phoneNumber) {
+        List<User> userList = new ArrayList<>();
+        Cursor cursor = db.query(USER_TABLE_NAME, null, null, null, null, null, null);
+        if (cursor.moveToFirst()) {
+            do {
+                if (phoneNumber.equals(cursor.getString(cursor.getColumnIndex(PHONE)))) {
+                    return cursor.getString(cursor.getColumnIndex(NAME));
+                }
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return null;
+    }
+
+    /**
+     * 检查用户名是否注册
+     * @param usrName
+     * @return
+     */
+    public boolean isUserNameExist(String usrName) {
+        Cursor cursor = db.query(USER_TABLE_NAME, null, null, null, null, null, null);
+        if (cursor.moveToFirst()) {
+            do {
+                if (usrName.equals(cursor.getString(cursor.getColumnIndex(NAME)))) {
+                    return true;
+                }
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return false;
+    }
+
+    /**
+     * 根据用户名查询手机号
+     * @param usrName
+     * @return
+     */
+    @Nullable
+    public String queryPhoneNumberWithName(String usrName) {
+        Cursor cursor = db.query(USER_TABLE_NAME, null, null, null, null, null, null);
+        if (cursor.moveToFirst()) {
+            do {
+                if (usrName.equals(cursor.getString(cursor.getColumnIndex(NAME)))) {
+                    return cursor.getString(cursor.getColumnIndex(PHONE));
+                }
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return null;
+    }
+
 //
 //    public void delete(String phone,String name,String password){
 //        db.execSQL("DELETE FROM db_user WHERE phone AND name = AND password AND phone="+phone+name+password);

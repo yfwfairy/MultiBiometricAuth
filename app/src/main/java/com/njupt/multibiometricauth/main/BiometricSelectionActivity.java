@@ -21,7 +21,7 @@ import com.njupt.multibiometricauth.voice.VoiceConfigActivity;
 public class BiometricSelectionActivity extends AppCompatActivity {
     TextView titleTextView;
     Button backBut;
-    ConstraintLayout voiceLayout,fingerLayout,faceLayout;
+    ConstraintLayout voiceLayout,faceLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,19 +42,16 @@ public class BiometricSelectionActivity extends AppCompatActivity {
             }
         });
         titleTextView = findViewById(R.id.textView_logo);
-        fingerLayout = findViewById(R.id.constraintLayout);
         voiceLayout= findViewById(R.id.constraintLayout2);
         faceLayout= findViewById(R.id.constraintLayout3);
 
         titleTextView.setTranslationY(-1000);
         voiceLayout.setTranslationX(1000);
         faceLayout.setTranslationX(1500);
-        fingerLayout.setTranslationX(2000);
 
         titleTextView.animate().translationY(0).alpha(1).setDuration(1000).setStartDelay(10).start();
         voiceLayout.animate().translationX(0).alpha(1).setDuration(1000).setStartDelay(10).start();
         faceLayout.animate().translationX(0).alpha(1).setDuration(1000).setStartDelay(10).start();
-        fingerLayout.animate().translationX(0).alpha(1).setDuration(1000).setStartDelay(10).start();
 
     }
 

@@ -28,4 +28,12 @@
         android:background="@color/color_bg_name"
         android:gravity="center"
         android:textColor="@android:color/white" />
+    <TextView
+        android:id="@+id/tv_item_voice_reg"
+        android:layout_marginTop="5dp"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:background="@color/color_bg_name"
+        android:gravity="center"
+        android:textColor="@android:color/white" />
 </LinearLayout>

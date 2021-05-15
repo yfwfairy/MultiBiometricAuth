@@ -168,6 +168,10 @@ public class SignupTabFragment extends Fragment {
                         Toast.makeText(getActivity(), "手机号已注册", Toast.LENGTH_SHORT).show();
                         return;
                     }
+                    if (mUserDatabaseHelper.isUserNameExist(username)) {
+                        Toast.makeText(getActivity(), "用户名已注册", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     if (phoneCode.length() < 11) {
                         Toast.makeText(getActivity(), "手机号不合法", Toast.LENGTH_SHORT).show();
                         return;

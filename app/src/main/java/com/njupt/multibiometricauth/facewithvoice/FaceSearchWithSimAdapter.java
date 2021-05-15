@@ -27,6 +27,10 @@ class FaceSearchWithSimAdapter extends RecyclerView.Adapter<FaceSearchWithSimAda
         this.compareResultList = compareResultList;
     }
 
+    public List<CompareResult> getResultList() {
+        return compareResultList;
+    }
+
     @NonNull
     @Override
     public CompareResultHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -35,6 +39,7 @@ class FaceSearchWithSimAdapter extends RecyclerView.Adapter<FaceSearchWithSimAda
         compareResultHolder.textView = itemView.findViewById(R.id.tv_item_name);
         compareResultHolder.imageView = itemView.findViewById(R.id.iv_item_head_img);
         compareResultHolder.simiTxv = itemView.findViewById(R.id.tv_item_simi);
+        compareResultHolder.voiceRegTxv = itemView.findViewById(R.id.tv_item_voice_reg);
         return compareResultHolder;
     }
 
@@ -48,7 +53,8 @@ class FaceSearchWithSimAdapter extends RecyclerView.Adapter<FaceSearchWithSimAda
                 .load(imgFile)
                 .into(holder.imageView);
         holder.textView.setText(compareResultList.get(position).getUserName());
-        holder.simiTxv.setText("相似度:" + compareResultList.get(position).getSimilar());
+        holder.simiTxv.setText("人脸相似度:" + compareResultList.get(position).getSimilar());
+        holder.voiceRegTxv.setText("声纹相似度" + (compareResultList.get(position).getVoiceSimilar()));
     }
 
     @Override
@@ -61,6 +67,7 @@ class FaceSearchWithSimAdapter extends RecyclerView.Adapter<FaceSearchWithSimAda
         TextView textView;
         ImageView imageView;
         TextView simiTxv;
+        TextView voiceRegTxv;
 
         CompareResultHolder(@NonNull View itemView) {
             super(itemView);

@@ -1,6 +1,8 @@
 package com.njupt.multibiometricauth.facewithvoice
 
 import android.Manifest
+import android.app.ProgressDialog
+import android.content.DialogInterface
 import android.content.pm.ActivityInfo
 import android.graphics.Point
 import android.hardware.Camera
@@ -8,18 +10,27 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.util.DisplayMetrics
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
+import android.view.View.OnTouchListener
 import android.view.ViewTreeObserver
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
 import com.arcsoft.face.*
 import com.arcsoft.face.enums.DetectFaceOrientPriority
 import com.arcsoft.face.enums.DetectMode
+import com.iflytek.cloud.*
+import com.iflytek.cloud.record.PcmRecorder
+import com.iflytek.cloud.record.PcmRecorder.PcmRecordListener
+import com.iflytek.cloud.util.VerifierUtil
 import com.njupt.multibiometricauth.Constants
 import com.njupt.multibiometricauth.MMAApplication
 import com.njupt.multibiometricauth.R
+import com.njupt.multibiometricauth.SQLite.UserDatabaseHelper
 import com.njupt.multibiometricauth.face.FaceConfigActivity
 import com.njupt.multibiometricauth.face.faceserver.CompareResult
 import com.njupt.multibiometricauth.face.faceserver.FaceServer
@@ -37,6 +48,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_face_with_voice.*
+import org.json.JSONObject
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.TimeUnit
@@ -107,6 +119,9 @@ class FaceWithVoiceActivity : FaceConfigActivity(), ViewTreeObserver.OnGlobalLay
      */
     private lateinit var flEngine: FaceEngine
 
+    // 身份验证对象
+    private lateinit var mIdVerifier: IdentityVerifier
+
     private var ftInitCode = -1
     private var frInitCode = -1
     private var flInitCode = -1
@@ -147,6 +162,8 @@ class FaceWithVoiceActivity : FaceConfigActivity(), ViewTreeObserver.OnGlobalLay
 
     private val ACTION_REQUEST_PERMISSIONS = 0x001
 
+    private lateinit var mUserDatabaseHelper: UserDatabaseHelper
+
     /**
      * 识别阈值
      */
@@ -160,11 +177,37 @@ class FaceWithVoiceActivity : FaceConfigActivity(), ViewTreeObserver.OnGlobalLay
             Manifest.permission.READ_PHONE_STATE
     )
 
+    private var mToast: Toast? = null
+
+    private val voiceRecMap =  mutableMapOf<String, Float>()
+
+    // 是否已经开始业务
+    private var mIsWorking = false
+
+    // 是否可以鉴别
+    private var mCanIdentify = false
+
+    // 录音采样率
+    private val SAMPLE_RATE = 16000
+
+    // pcm录音机
+    private var mPcmRecorder: PcmRecorder? = null
+
+    // 进度对话框
+    private var mProDialog: ProgressDialog? = null
+
+    // 默认为数字密码
+    private val mPwdType = 3
+
+    // 用于鉴别的数字密码
+    private var mIdentifyNumPwd = ""
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_face_with_voice)
 
+        mUserDatabaseHelper = UserDatabaseHelper(this)
         //保持亮屏
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
@@ -175,13 +218,38 @@ class FaceWithVoiceActivity : FaceConfigActivity(), ViewTreeObserver.OnGlobalLay
         // Activity启动后就锁定为启动时的方向
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LOCKED
 
+        initView()
+
         //本地人脸库初始化
         FaceServer.getInstance().init(this)
 
-        initView()
+        //声纹初始化
+        initVoiceEngine()
+
+    }
+
+    private fun initVoiceEngine() {
+        mIdVerifier = IdentityVerifier.createVerifier(this) { errorCode ->
+            if (ErrorCode.SUCCESS == errorCode) {
+                showTip("声纹引擎初始化成功")
+            } else {
+                showTip("声纹引擎初始化失败，错误码：$errorCode,请点击网址https://www.xfyun.cn/document/error-code查询解决方案")
+            }
+        }
+    }
+
+    private fun showTip(str: String) {
+        runOnUiThread {
+            mToast?.setText(str)
+            mToast?.show()
+        }
     }
 
     private fun initView() {
+        mToast = Toast.makeText(this, "", Toast.LENGTH_LONG)
+
+        initProDialog()
+
         single_camera_texture_preview.viewTreeObserver.addOnGlobalLayoutListener(this)
 
         compareResultList = mutableListOf()
@@ -196,6 +264,24 @@ class FaceWithVoiceActivity : FaceConfigActivity(), ViewTreeObserver.OnGlobalLay
             single_camera_recycler_view_person.itemAnimator = DefaultItemAnimator()
         }
 
+        mIdentifyNumPwd = VerifierUtil.generateNumberPassword(8)
+
+        record_btn.setOnTouchListener(mPressTouchListener)
+
+        voice_text_txv.text = mIdentifyNumPwd
+    }
+
+    private fun initProDialog() {
+        mProDialog = ProgressDialog(this)
+        mProDialog?.setCancelable(true)
+        mProDialog?.setTitle("请稍候")
+        // cancel进度框时，取消正在进行的操作
+        // cancel进度框时，取消正在进行的操作
+        mProDialog?.setOnCancelListener(DialogInterface.OnCancelListener {
+            if (null != mIdVerifier) {
+                mIdVerifier.cancel()
+            }
+        })
     }
 
 
@@ -322,7 +408,8 @@ class FaceWithVoiceActivity : FaceConfigActivity(), ViewTreeObserver.OnGlobalLay
                             .flQueueSize(MAX_DETECT_NUM)
                             .previewSize(previewSize)
                             .faceListener(faceListener)
-                            .trackedFaceCount(trackedFaceCount?: ConfigUtil.getTrackedFaceCount(applicationContext))
+                            .trackedFaceCount(trackedFaceCount
+                                    ?: ConfigUtil.getTrackedFaceCount(applicationContext))
                             .build()
                 }
             }
@@ -577,6 +664,8 @@ class FaceWithVoiceActivity : FaceConfigActivity(), ViewTreeObserver.OnGlobalLay
                             compareResultList?.clear()
                             compareResult.forEach {
                                 it.trackId = requestId
+                                //从map中查询此人声纹相似度
+                                it.voiceSimilar = queryVoiceSimiWithUsrName(it.userName) ?: 0f
                                 compareResultList?.add(it)
                                 adapter?.notifyDataSetChanged()
                                 Log.d(TAG, "find similar person: $compareResultList")
@@ -592,6 +681,9 @@ class FaceWithVoiceActivity : FaceConfigActivity(), ViewTreeObserver.OnGlobalLay
                     override fun onComplete() {}
                 })
     }
+
+    private fun queryVoiceSimiWithUsrName(userName: String?) = voiceRecMap[userName]
+
 
     private fun initEngine() {
         ftEngine = FaceEngine()
@@ -654,6 +746,8 @@ class FaceWithVoiceActivity : FaceConfigActivity(), ViewTreeObserver.OnGlobalLay
         faceHelper?.trackedFaceCount?.let { ConfigUtil.setTrackedFaceCount(this, it) }
         faceHelper?.release()
         FaceServer.getInstance().unInit()
+
+        mIdVerifier.destroy()
         super.onDestroy()
     }
 
@@ -671,5 +765,154 @@ class FaceWithVoiceActivity : FaceConfigActivity(), ViewTreeObserver.OnGlobalLay
         }
         countMap[key] = ++value
         return value
+    }
+
+    /**
+     * 按压监听器
+     */
+    private val mPressTouchListener = OnTouchListener { v, event ->
+        if (null == mIdVerifier) {
+            // 创建单例失败，与 21001 错误为同样原因，参考 http://bbs.xfyun.cn/forum.php?mod=viewthread&tid=9688
+            showTip("创建对象失败，请确认 libmsc.so 放置正确，且有调用 createUtility 进行初始化")
+            return@OnTouchListener false
+        }
+        when (event.action) {
+            MotionEvent.ACTION_DOWN -> if (!mIsWorking) {
+                vocalSearch()
+                mIsWorking = true
+                mCanIdentify = true
+                if (mCanIdentify) {
+                    try {
+                        mPcmRecorder = PcmRecorder(SAMPLE_RATE, 40)
+                        mPcmRecorder?.startRecording(mPcmRecordListener)
+                    } catch (e: SpeechError) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+            MotionEvent.ACTION_UP -> {
+                v.performClick()
+                if (mCanIdentify) {
+                    showProDialog("鉴别中...")
+                }
+                mIdVerifier.stopWrite("ivp")
+                mPcmRecorder?.stopRecord(true)
+                mIsWorking = false
+            }
+            else -> {
+            }
+        }
+        false
+    }
+
+    /**
+     * 录音机监听器
+     */
+    private val mPcmRecordListener: PcmRecordListener = object : PcmRecordListener {
+        override fun onRecordStarted(success: Boolean) {}
+        override fun onRecordReleased() {}
+        override fun onRecordBuffer(data: ByteArray, offset: Int, length: Int) {
+            val params = StringBuffer()
+            // 子业务执行参数，若无可以传空字符传
+            params.append("ptxt=$mIdentifyNumPwd,")
+            params.append("pwdt=$mPwdType,")
+            params.append(",group_id=${Constants.VoiceGroupId},topc=3")
+            mIdVerifier.writeData("ivp", params.toString(), data, 0, length)
+        }
+
+        override fun onError(e: SpeechError) {
+            dismissProDialog()
+            mCanIdentify = false
+        }
+    }
+
+    private fun vocalSearch() {
+        mIdVerifier.setParameter(SpeechConstant.PARAMS, null)
+        // 设置会话场景
+        // 设置会话场景
+        mIdVerifier.setParameter(SpeechConstant.MFV_SCENES, "ivp")
+        // 设置会话类型
+        // 设置会话类型
+        mIdVerifier.setParameter(SpeechConstant.MFV_SST, "identify")
+        // 设置组ID
+        // 设置组ID
+        mIdVerifier.setParameter("group_id", Constants.VoiceGroupId)
+        // 设置监听器，开始会话
+        // 设置监听器，开始会话
+        mIdVerifier.startWorking(mSearchListener)
+    }
+
+    /**
+     * 声纹鉴别监听器
+     */
+    private val mSearchListener: IdentityListener = object : IdentityListener {
+        override fun onResult(result: IdentityResult, islast: Boolean) {
+            Log.d(TAG, result.resultString)
+            dismissProDialog()
+            mIsWorking = false
+            handleResult(result)
+        }
+
+        override fun onEvent(eventType: Int, arg1: Int, arg2: Int, obj: Bundle?) {
+            if (SpeechEvent.EVENT_VOLUME == eventType) {
+                showTip("音量：$arg1")
+            } else if (SpeechEvent.EVENT_VAD_EOS == eventType) {
+                showTip("录音结束")
+            }
+        }
+
+        override fun onError(error: SpeechError) {
+            mCanIdentify = false
+            dismissProDialog()
+            mIsWorking = false
+            showTip(error.getPlainDescription(true))
+        }
+    }
+
+    /**
+     * 处理声纹鉴别的结果
+     */
+    private fun handleResult(result: IdentityResult) {
+        result.resultString.run {
+            JSONObject(this)
+        }.let {
+            if (it.getInt("ret") == ErrorCode.SUCCESS) {
+                val ifv_result = it.getJSONObject("ifv_result")
+                val candidates = ifv_result.getJSONArray("candidates")
+                for (i in 0 until candidates.length()) {
+                    val obj = candidates.getJSONObject(i)
+                    obj.optString("user").apply {
+                        val score = obj.optDouble("score").toFloat()
+                        val usrName = mUserDatabaseHelper.queryUserWithPhoneNumber(this)
+                        usrName?.let {
+                            voiceRecMap[it] =  score
+                        }
+                        Log.d(TAG, "handleResult: userName: $this score: $score")
+                    }
+                    refreshAdapter()
+                    adapter?.notifyDataSetChanged()
+                }
+            }
+        }
+    }
+
+    private fun refreshAdapter() {
+        adapter?.resultList?.let {
+            it.forEach { cr ->
+                voiceRecMap[cr.userName]?.let {
+                    cr.voiceSimilar = it
+                }
+            }
+        }
+        adapter?.notifyDataSetChanged()
+    }
+
+    private fun dismissProDialog() {
+        mProDialog?.dismiss()
+    }
+
+    private fun showProDialog(msg: String) {
+        mProDialog?.setMessage(msg)
+        mProDialog?.show()
     }
 }

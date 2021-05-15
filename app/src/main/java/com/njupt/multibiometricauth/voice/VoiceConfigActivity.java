@@ -95,6 +95,7 @@ public class VoiceConfigActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_voice_config);
+        initEngine();
         initUI();
     }
 
@@ -110,7 +111,6 @@ public class VoiceConfigActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        initEngine();
     }
 
     private void initEngine() {
@@ -129,7 +129,10 @@ public class VoiceConfigActivity extends AppCompatActivity {
                 }
             }
         });
+
     }
+
+
 
     private void showTip(final String str) {
         mToast.setText(str);
@@ -611,6 +614,8 @@ public class VoiceConfigActivity extends AppCompatActivity {
                         }
                         mRegStatus = VoiceRegStatus.REG;
                         updateRegStatus();
+                        //加入组
+                        joinGroup(Constants.VoiceGroupId);
                     } else {
                         int nowTimes = suc + 1;
                         int leftTimes = 5 - nowTimes;
@@ -692,5 +697,98 @@ public class VoiceConfigActivity extends AppCompatActivity {
         }
     };
 
+    /**
+     * 加入组
+     * @param groupIdCreate
+     */
+    private void joinGroup(String groupIdCreate) {
+        if (TextUtils.isEmpty(groupIdCreate)) {
+            showTip("请填写groupId");
+            return;
+        }
+        // sst=add，auth_id=eqhe，group_id=123456，scope=person
+        mIdVerifier.setParameter(SpeechConstant.PARAMS, null);
+        // 设置会话场景
+        mIdVerifier.setParameter(SpeechConstant.MFV_SCENES, "ipt");
+        // 用户id
+        mIdVerifier.setParameter(SpeechConstant.AUTH_ID, getPhoneNumber());
+        // 设置模型参数，若无可以传空字符传
+        StringBuffer params2 = new StringBuffer();
+        params2.append("auth_id=" + getPhoneNumber());
+        params2.append(",scope=person");
+        params2.append(",group_id=" + groupIdCreate);
+        // 执行模型操作
+        mIdVerifier.execute("ipt", "add", params2.toString(), mAddListener);
+    }
 
+    /**
+     * 加入组监听器
+     */
+    private IdentityListener mAddListener = new IdentityListener() {
+
+        @Override
+        public void onResult(IdentityResult result, boolean islast) {
+            Log.d(TAG, result.getResultString());
+            showTip("加入组成功");
+        }
+
+        @Override
+        public void onEvent(int eventType, int arg1, int arg2, Bundle obj) {
+        }
+
+        @Override
+        public void onError(SpeechError error) {
+            showTip(error.getPlainDescription(true));
+        }
+    };
+
+
+    public void queryGroupMembers(View view) {
+        String groupId = Constants.VoiceGroupId;
+		if (TextUtils.isEmpty(groupId)) {
+			showTip("请填写groupId");
+			return;
+		}
+
+		// sst=add，auth_id=eqhe，group_id=123456，scope=person
+		mIdVerifier.setParameter(SpeechConstant.PARAMS, null);
+		// 设置会话场景
+		mIdVerifier.setParameter(SpeechConstant.MFV_SCENES, "ipt");
+		// 用户id
+		mIdVerifier.setParameter(SpeechConstant.AUTH_ID, getPhoneNumber());
+		// 设置模型参数，若无可以传空字符传
+		StringBuffer params2 = new StringBuffer();
+		params2.append("scope=group");
+		params2.append(",group_id=" + groupId);
+		// 执行模型操作
+		mIdVerifier.execute("ipt", "query", params2.toString(), mQueryListener);
+    }
+
+    public void queryGroups(View view) {
+        mIdVerifier.setParameter(SpeechConstant.PARAMS, null);
+        mIdVerifier.setParameter(SpeechConstant.AUTH_ID, "wer");
+        // 设置模型参数，若无可以传空字符传
+        StringBuffer params2 = new StringBuffer();
+        params2.append("scope=appid");
+        Log.e(TAG,"queryGroups:"+params2.toString());
+        // 执行模型操作
+        mIdVerifier.execute("ipt", "query", params2.toString(), mQueryListener);
+    }
+
+    private IdentityListener mQueryListener = new IdentityListener() {
+        @Override
+        public void onResult(IdentityResult result, boolean islast) {
+            Log.d(TAG, result.getResultString());
+            showTip("查询成功");
+        }
+        @Override
+        public void onEvent(int eventType, int arg1, int arg2, Bundle obj) {
+
+        }
+        @Override
+        public void onError(SpeechError error) {
+            Log.d(TAG, error.getPlainDescription(true));
+            //showTip(ErrorDesc.getDesc(error) + ":" + error.getErrorCode());
+        }
+    };
 }

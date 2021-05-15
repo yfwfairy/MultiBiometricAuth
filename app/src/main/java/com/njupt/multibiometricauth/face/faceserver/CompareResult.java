@@ -5,6 +5,16 @@ public class CompareResult {
     private float similar;
     private int trackId;
 
+    public float getVoiceSimilar() {
+        return voiceSimilar;
+    }
+
+    public void setVoiceSimilar(float voiceSimilar) {
+        this.voiceSimilar = voiceSimilar;
+    }
+
+    private float voiceSimilar;
+
     public CompareResult(String userName, float similar) {
         this.userName = userName;
         this.similar = similar;
