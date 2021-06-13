@@ -276,7 +276,7 @@ class FaceWithVoiceActivity : FaceConfigActivity(), ViewTreeObserver.OnGlobalLay
         mProDialog?.setCancelable(true)
         mProDialog?.setTitle("请稍候")
         // cancel进度框时，取消正在进行的操作
-        // cancel进度框时，取消正在进行的操作
+
         mProDialog?.setOnCancelListener(DialogInterface.OnCancelListener {
             if (null != mIdVerifier) {
                 mIdVerifier.cancel()

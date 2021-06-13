@@ -18,7 +18,7 @@ import com.njupt.multibiometricauth.facewithvoice.FaceWithVoiceActivity;
 public class ScenarioSelectActivity extends AppCompatActivity {
     TextView titleTextView;
     Button backBut;
-    ConstraintLayout gestureLayout,multiLayout;
+    ConstraintLayout multiLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,17 +42,17 @@ public class ScenarioSelectActivity extends AppCompatActivity {
             }
         });
         titleTextView = findViewById(R.id.textView_logo);
-        gestureLayout = findViewById(R.id.constraintLayout2);
+
         multiLayout= findViewById(R.id.constraintLayout1);
 
 
         titleTextView.setTranslationY(-1000);
         multiLayout.setTranslationX(1000);
-        gestureLayout.setTranslationX(1500);
+
 
         titleTextView.animate().translationY(0).alpha(1).setDuration(1000).setStartDelay(10).start();
         multiLayout.animate().translationX(0).alpha(1).setDuration(1000).setStartDelay(10).start();
-        gestureLayout.animate().translationX(0).alpha(1).setDuration(1000).setStartDelay(10).start();
+
     }
 
     public void saveLoginInfo(Intent intent) {

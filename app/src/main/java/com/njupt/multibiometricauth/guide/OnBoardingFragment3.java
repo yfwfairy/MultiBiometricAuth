@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import com.njupt.multibiometricauth.R;
 import com.njupt.multibiometricauth.loginsign.LoginActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.njupt.multibiometricauth.main.MainActivity;
 
 public class OnBoardingFragment3 extends Fragment {
     TextView nextText;
@@ -27,7 +28,7 @@ public class OnBoardingFragment3 extends Fragment {
         nextText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), LoginActivity.class);
+                Intent intent = new Intent(getActivity(), MainActivity.class);
                 startActivity(intent);
             }
         });
